@@ -74,18 +74,28 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: Test front-end
+          command: |
+            cd frontend
+            npm install
+            npm run test
                 
   test-backend:
     docker:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: Test back-end
+          command: |
+            cd backend
+            npm install
+            npm run test
             
   scan-frontend:
     docker:
