@@ -67,7 +67,7 @@ jobs:
 
   test-frontend:
     docker:
-      # Docker image here
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
       # Restore from cache
@@ -75,7 +75,7 @@ jobs:
                 
   test-backend:
     docker:
-      # Docker image here
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
       # Restore from cache
@@ -83,7 +83,7 @@ jobs:
             
   scan-frontend:
     docker:
-      # Docker image here
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
       # Restore from cache
@@ -91,7 +91,7 @@ jobs:
 
   scan-backend:
     docker:
-      # Docker image here
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
       # Restore from cache
@@ -99,7 +99,7 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      # Docker image here that supports AWS CLI
+      - image: circleci/aws-cli@2.0.3
     steps:
       # Checkout code from git
       - run:
@@ -152,7 +152,7 @@ jobs:
 
   run-migrations:
     docker:
-      # Docker image here that supports NodeJS
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       - run:
