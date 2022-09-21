@@ -29,7 +29,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: udacity-c3-kp
-      ImageId: ami-0f69dd1d0d03ad669 
+      ImageId: ami-08c40ec9ead489470 
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
