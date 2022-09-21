@@ -136,7 +136,7 @@ jobs:
       - run:
           name: Ensure back-end infrastructure exists
           command: |
-            aws cloudformation deploy \
+            aws cloudformation -vvv deploy \
               --template-file .circleci/files/backend.yml \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                   --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \  
@@ -144,7 +144,7 @@ jobs:
       - run:
           name: Ensure front-end infrastructure exist
           command: |
-            aws cloudformation deploy \
+            aws cloudformation -vvv deploy \
               --template-file .circleci/files/frontend.yml \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
                   --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \  
@@ -312,6 +312,9 @@ workflows:
               only: [circleci-project-setup]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
+          filters:
+            branches:
+              only: [circleci-project-setu]
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
