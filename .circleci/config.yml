@@ -165,12 +165,13 @@ jobs:
       - run:
           name: Install tar - gzip utility
           command: |
-            yum install -y tar gzip
+            # yum install -y tar gzip
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          when: on_fail
 
   configure-infrastructure:
     docker:
@@ -200,7 +201,8 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
             # exit 1
       
-      # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          when: on_fail      
 
   run-migrations:
     docker:
@@ -217,7 +219,8 @@ jobs:
           command: |
             # Your code here
             exit 1
-     # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          when: on_fail     
 
   deploy-frontend:
     docker:
@@ -238,7 +241,8 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          when: on_fail    
                     
   deploy-backend:
     docker:
@@ -255,7 +259,8 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          when: on_fail
 
   smoke-test:
     docker:
@@ -278,7 +283,8 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          when: on_fail
 
   cloudfront-update:
     docker:
@@ -293,7 +299,8 @@ jobs:
           name: Update cloudfront distribution
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          when: on_fail
 
   cleanup:
       docker:
