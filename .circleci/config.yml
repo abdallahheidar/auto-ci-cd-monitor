@@ -318,8 +318,14 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
+      - starter:
+          filters:
+            branches:
+              only: [master]
+      - build-frontend:
+          requires: [starter]
+      - build-backend:
+          requires: [starter]
       - test-frontend:
           requires: [build-frontend]
       - test-backend:
