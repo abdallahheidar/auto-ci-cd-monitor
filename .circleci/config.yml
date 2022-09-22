@@ -170,7 +170,9 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      - destroy-environment:
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
           when: on_fail
 
   configure-infrastructure:
@@ -200,9 +202,10 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
             # exit 1
-      
-      - destroy-environment:
-          when: on_fail      
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
+          when: on_fail     
 
   run-migrations:
     docker:
@@ -219,8 +222,10 @@ jobs:
           command: |
             # Your code here
             exit 1
-      - destroy-environment:
-          when: on_fail     
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
+          when: on_fail   
 
   deploy-frontend:
     docker:
@@ -241,8 +246,10 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
-      - destroy-environment:
-          when: on_fail    
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
+          when: on_fail   
                     
   deploy-backend:
     docker:
@@ -259,7 +266,9 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
-      - destroy-environment:
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
           when: on_fail
 
   smoke-test:
@@ -283,7 +292,9 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-      - destroy-environment:
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
           when: on_fail
 
   cloudfront-update:
@@ -299,7 +310,9 @@ jobs:
           name: Update cloudfront distribution
           command: |
             # your code here
-      - destroy-environment:
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
           when: on_fail
 
   cleanup:
