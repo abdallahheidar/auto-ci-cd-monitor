@@ -163,7 +163,7 @@ jobs:
             cat .circleci/ansible/inventory.txt
             # exit 1
       - run:
-          name: Install tar utility
+          name: Install tar - gzip utility
           command: |
             yum install -y tar gzip
       - persist_to_workspace:
