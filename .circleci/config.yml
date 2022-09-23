@@ -10,13 +10,12 @@ commands:
     steps:
       - run:
           name: Destroy environments
-          when: on_fail
           command: |
             aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
 
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.Workflow_ID>>
 
-            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
+            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.Workflow_ID>>
             
             # exit 1
 
@@ -165,11 +164,15 @@ jobs:
       - run:
           name: Install tar - gzip utility
           command: |
-            # yum install -y tar gzip
+            yum install -y tar gzip
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+      - run:
+          name: Fail Me
+          command: |
+            exit 1          
       - run:
           name: Destroy Enviornment
           command: destroy-environment
