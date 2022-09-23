@@ -169,11 +169,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
-      - run:
-          name: Fail Me
-          command: |
-            exit 1          
+            - project/.circleci/ansible/inventory.txt         
       - destroy-environment
 
   configure-infrastructure:
