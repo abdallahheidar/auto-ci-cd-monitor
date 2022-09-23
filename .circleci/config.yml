@@ -199,10 +199,7 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
             # exit 1
-      - run:
-          name: Destroy Enviornment
-          command: destroy-environment
-          when: on_fail     
+      - destroy-environment     
 
   run-migrations:
     docker:
@@ -219,10 +216,7 @@ jobs:
           command: |
             # Your code here
             exit 1
-      - run:
-          name: Destroy Enviornment
-          command: destroy-environment
-          when: on_fail   
+      - destroy-environment   
 
   deploy-frontend:
     docker:
@@ -243,10 +237,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
-      - run:
-          name: Destroy Enviornment
-          command: destroy-environment
-          when: on_fail   
+      - destroy-environment   
                     
   deploy-backend:
     docker:
@@ -263,10 +254,7 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
-      - run:
-          name: Destroy Enviornment
-          command: destroy-environment
-          when: on_fail
+      - destroy-environment
 
   smoke-test:
     docker:
@@ -289,10 +277,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-      - run:
-          name: Destroy Enviornment
-          command: destroy-environment
-          when: on_fail
+      - destroy-environment
 
   cloudfront-update:
     docker:
@@ -307,10 +292,7 @@ jobs:
           name: Update cloudfront distribution
           command: |
             # your code here
-      - run:
-          name: Destroy Enviornment
-          command: destroy-environment
-          when: on_fail
+      - destroy-environment
 
   cleanup:
       docker:
