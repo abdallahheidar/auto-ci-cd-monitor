@@ -10,6 +10,7 @@ commands:
     steps:
       - run:
           name: Destroy environments
+          when: on_fail
           command: |
             aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
 
@@ -173,10 +174,7 @@ jobs:
           name: Fail Me
           command: |
             exit 1          
-      - run:
-          name: Destroy Enviornment
-          command: destroy-environment
-          when: on_fail
+      - destroy-environment
 
   configure-infrastructure:
     docker:
