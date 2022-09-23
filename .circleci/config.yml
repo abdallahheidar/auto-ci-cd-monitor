@@ -169,7 +169,13 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      - destroy-environment:
+      - run:
+          name: Fail Me
+          command: |
+            exit 1          
+      - run:
+          name: Destroy Enviornment
+          command: destroy-environment
           when: on_fail
 
   configure-infrastructure:
