@@ -396,7 +396,6 @@ jobs:
           command: |
             ls backend | grep README.md
             cp backend/README.md .circleci/ansible/roles/deploy/files
-            ls -la | grep .circleci
             ls -la .circleci/ansible/roles/deploy/files
             exit 1
           
