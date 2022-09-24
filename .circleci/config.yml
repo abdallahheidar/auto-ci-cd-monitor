@@ -12,9 +12,9 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.Workflow_ID>>
-            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.Workflow_ID>>
+            # aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+            # aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.Workflow_ID>>
+            # aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.Workflow_ID>>
             # exit 1
 
   revert-migrations:
@@ -29,6 +29,7 @@ commands:
           when: on_fail
           command: |
             SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<<parameters.Workflow_ID>>)
+            echo "$SUCCESS: {$SUCCESS}"
             if (( $SUCCESS == 1 ));
             then
               cd ~/project/backend
