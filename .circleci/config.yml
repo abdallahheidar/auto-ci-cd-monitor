@@ -308,12 +308,13 @@ jobs:
             npm run build
             tar -cvf artifact.tar.gz dist/* package*
             cd ..
-            cp backend/artifact.tar.gz /home/circleci/project/.circleci/ansible/roles/deploy/files
-            echo "ls -la"
-            ls -la
-            echo "ls backend/"
-            ls backend/
-            pwd
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            echo "ls -la | grep .circleci"
+            ls -la | grep .circleci
+            echo "ls -la .circleci/ansible/roles/deploy/files"
+            ls -la .circleci/ansible/roles/deploy/files
+            echo "ls backend"
+            ls backend | grep artifact.tar.gz
       - run:
           name: Deploy backend
           command: |
@@ -385,13 +386,29 @@ jobs:
               then
                 # your code here
               fi
-            
+  test-1:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - run:
+          name: TT
+          command: |
+            pwd
+            cp backend/README.md .circleci/ansible/roles/deploy/files
+            echo "ls -la .circleci/ansible/roles/deploy/files"
+            ls -la .circleci/ansible/roles/deploy/files
+            exit 1
+          
 
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
+      - test-1
+      - build-frontend:
+          requires: [test-1]
+      - build-backend:
+          requires: [test-1]
       - test-frontend:
           requires: [build-frontend]
       - test-backend:
