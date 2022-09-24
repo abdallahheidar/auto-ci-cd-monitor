@@ -290,6 +290,8 @@ jobs:
       - install_ansible
       - install_awscli
       - install_nodejs
+      - restore_cache:
+          keys: [backend-deps]
       - add_ssh_keys:
           fingerprints: ["34:f7:a8:2d:69:01:4c:f4:8a:df:f6:80:2e:c0:07:65"]
       - attach_workspace:
@@ -305,7 +307,6 @@ jobs:
             cd backend
             npm run build
             tar -czf artifact.tar.gz dist/* package*
-
             cd ..
             cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
