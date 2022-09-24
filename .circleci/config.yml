@@ -394,8 +394,8 @@ jobs:
       - run:
           name: TT
           command: |
-            cp backend/README.md .
-            ls | grep README.md
+            cp backend/README.md .circleci/
+            ls .circleci/ | grep README.md
             exit 1
           
 workflows:
