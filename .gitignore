@@ -72,3 +72,4 @@ dist
 udacity-c3-kp.pem
 udacity-c3-user_credentials.csv
 db_creds
+ansible.cfg
