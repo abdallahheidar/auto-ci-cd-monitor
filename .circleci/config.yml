@@ -271,7 +271,7 @@ jobs:
             echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
             cat frontend/.env
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            echo "API_URL=${API_URL}"
       - run:
           name: Deploy frontend objects
           command: |
@@ -327,6 +327,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            exit 1
             # your code here
       - run:
           name: Get backend url
@@ -341,6 +342,7 @@ jobs:
           command: |
             # your code here
       - destroy-environment
+      - revert-migrations
 
   cloudfront-update:
     docker:
@@ -356,6 +358,7 @@ jobs:
           command: |
             # your code here
       - destroy-environment
+      - revert-migrations
 
   cleanup:
       docker:
