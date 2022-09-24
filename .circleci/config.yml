@@ -259,7 +259,7 @@ jobs:
           command: |
             cd frontend
             npm install
-            exit 1
+            # exit 1
       - run:
           name: Get backend url
           command: |
