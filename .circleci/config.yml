@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs: 
+    slack: circleci/slack@4.10.1
+
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -29,7 +32,7 @@ commands:
           when: on_fail
           command: |
             SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<<parameters.Workflow_ID>>)
-            echo "$SUCCESS: {$SUCCESS}"
+            echo "SUCCESS: $SUCCESS"
             if (( $SUCCESS == 1 ));
             then
               cd ~/project/backend
@@ -269,15 +272,14 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
 
-            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
+            echo "API_URL=http://$BACKEND_PUBLIC_IP:3030" > frontend/.env
             cat frontend/.env
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL=${API_URL}"
+            export API_URL="http://$BACKEND_IP:3030"
       - run:
           name: Deploy frontend objects
           command: |
             cd frontend
-            npm run build
+            npm run build:prod
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations                    
@@ -312,20 +314,26 @@ jobs:
       - run:
           name: Deploy backend
           command: |
+            export TYPEORM_HOST=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            echo $TYPEORM_HOST >> .circleci/ansible/inventory.txt
             export TYPEORM_MIGRATIONS_DIR=./migrations
             export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
             export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
             cat inventory.txt
-            ansible-playbook -vvv -i inventory.txt deploy-backend.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
       - revert-migrations
 
   smoke-test:
     docker:
-      - image: python:3.7-alpine3.11 
+      - image: cimg/python:3.10 
     steps:
       - checkout
+      - install_awscli
       - run:
           name: Install dependencies
           command: |
