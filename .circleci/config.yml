@@ -394,8 +394,9 @@ jobs:
       - run:
           name: TT
           command: |
-            cp backend/README.md .circleci/
-            ls .circleci/ | grep README.md
+            ls .circleci/ansible/roles/deploy
+            cp backend/README.md .circleci/ansible/roles/deploy/
+            ls .circleci/ansible/roles/deploy/ | grep README.md
             exit 1
           
 workflows:
