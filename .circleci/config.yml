@@ -224,7 +224,7 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
             # exit 1
-      - destroy-environment     
+      - destroy-environment
 
   run-migrations:
     docker:
@@ -321,35 +321,37 @@ jobs:
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
-            export TYPEORM_MIGRATIONS_DIR=./migrations
-            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-            export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
             cat inventory.txt
-            echo $TYPEORM_ENTITIES
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
       - revert-migrations
 
   smoke-test:
     docker:
-      - image: cimg/python:3.10 
+      - image: amazon/aws-cli 
     steps:
       - checkout
       - install_awscli
       - run:
-          name: Install dependencies
-          command: |
-            exit 1
-            # your code here
-      - run:
           name: Get backend url
           command: |
-            # your code here
+            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
       - run:
           name: Backend smoke test.
           command: |
-            # your code here
+            URL="http://$BACKEND_PUBLIC_IP:3030/api/status"
+            if curl -s --head ${URL}
+            then
+              echo "It worked!"
+              exit 0
+            else
+              echo "Rolling Back"
+              exit 1
+            fi
       - run:
           name: Frontend smoke test.
           command: |
