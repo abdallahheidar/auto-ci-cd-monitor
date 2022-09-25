@@ -333,23 +333,29 @@ jobs:
 
   smoke-test:
     docker:
-      - image: cimg/python:3.10 
+      - image: amazon/aws-cli 
     steps:
       - checkout
       - install_awscli
       - run:
-          name: Install dependencies
-          command: |
-            exit 1
-            # your code here
-      - run:
           name: Get backend url
           command: |
-            # your code here
+            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
       - run:
           name: Backend smoke test.
           command: |
-            # your code here
+            URL="http://$BACKEND_PUBLIC_IP:3030/api/status"
+            if curl -s --head ${URL}
+            then
+              echo "It worked!"
+              exit 0
+            else
+              echo "Rolling Back"
+              exit 1
+            fi
       - run:
           name: Frontend smoke test.
           command: |
