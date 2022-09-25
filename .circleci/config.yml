@@ -340,7 +340,6 @@ jobs:
           name: Install dependencies
           command: |
             exit 1
-            exit 1
             # your code here
       - run:
           name: Get backend url
