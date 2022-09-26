@@ -333,8 +333,9 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> .env
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> .env
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
+            cat .env
             cd ..
-            tar -cvf artifact.tar.gz dist/* package* .env
+            tar -cvf artifact.tar.gz dist/* package*
             cd ..
             cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
