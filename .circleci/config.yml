@@ -366,6 +366,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
+      - notify_on_failure
       # - destroy-environment
       # - revert-migrations
 
@@ -403,26 +404,12 @@ jobs:
               then
                 # your code here
               fi
-  Test-1:
-      docker:
-        - image: amazon/aws-cli
-      steps:
-        - checkout
-        - run:
-            name: Get old stack workflow id
-            command: |
-              exit 1
-              
-        - notify_on_failure
 
 workflows:
   default:
     jobs:
-      - Test-1
-      - build-frontend:
-          requires: [Test-1]
-      - build-backend:
-          requires: [Test-1]
+      - build-frontend
+      - build-backend
       - test-frontend:
           requires: [build-frontend]
       - test-backend:
