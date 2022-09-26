@@ -412,6 +412,7 @@ jobs:
             name: Get old stack workflow id
             command: |
               exit 1
+        - notify_on_failure
 
 workflows:
   default:
