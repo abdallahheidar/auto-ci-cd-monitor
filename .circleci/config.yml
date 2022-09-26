@@ -69,6 +69,13 @@ commands:
           command: |
             python3 -m pip install --user ansible
 
+  notify_on_failure:
+      steps:
+        - slack/notify:
+            event: fail
+            channel: $SLACK_DEFAULT_CHANNEL
+            template: basic_fail_1
+
 jobs:
   build-frontend:
     docker:
@@ -359,6 +366,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
+      - notify_on_failure
       # - destroy-environment
       # - revert-migrations
 
@@ -396,22 +404,22 @@ jobs:
               then
                 # your code here
               fi
-      
+
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [master]
