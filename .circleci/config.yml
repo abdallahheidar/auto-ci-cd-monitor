@@ -435,7 +435,7 @@ workflows:
       #     filters:
       #       branches:
       #         only: [master]
-      - configure-infrastructure
+      # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       #     filters:
       #       branches:
@@ -444,7 +444,7 @@ workflows:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
-      # - deploy-backend:
+      - deploy-backend
       #     requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
