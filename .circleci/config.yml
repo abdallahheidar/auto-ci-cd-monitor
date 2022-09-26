@@ -69,6 +69,13 @@ commands:
           command: |
             python3 -m pip install --user ansible
 
+  notify_on_failure:
+      steps:
+        - slack/notify:
+            event: fail
+            channel: $SLACK_DEFAULT_CHANNEL
+            template: basic_fail_1
+
 jobs:
   build-frontend:
     docker:
@@ -80,6 +87,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
+            exit 1
             cd frontend
             npm install
             npm run build
