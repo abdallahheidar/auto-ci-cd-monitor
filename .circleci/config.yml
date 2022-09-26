@@ -233,6 +233,8 @@ jobs:
       - checkout
       - install_awscli
       - install_nodejs
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
@@ -258,6 +260,8 @@ jobs:
       - checkout
       - install_awscli
       - install_nodejs
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Install dependencies
           command: |
@@ -294,7 +298,7 @@ jobs:
       - install_awscli
       - install_nodejs
       - restore_cache:
-          keys: [backend-deps]
+          keys: [backend-build]
       - add_ssh_keys:
           fingerprints: ["34:f7:a8:2d:69:01:4c:f4:8a:df:f6:80:2e:c0:07:65"]
       - attach_workspace:
@@ -327,14 +331,10 @@ jobs:
 
   smoke-test:
     docker:
-      - image: amazon/aws-cli 
+      - image: cimg/python:3.10 
     steps:
       - checkout
       - install_awscli
-      - run:
-          name: Install tar - gzip utility
-          command: |
-            yum install -y tar gzip
       - run:
           name: Get backend url
           command: |
