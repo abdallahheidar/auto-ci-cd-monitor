@@ -217,8 +217,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["34:f7:a8:2d:69:01:4c:f4:8a:df:f6:80:2e:c0:07:65"]
-      - attach_workspace:
-          at: ~/
+      # - attach_workspace:
+      #     at: ~/
       - install_awscli
       - run:
           name: Install Ansible
@@ -229,9 +229,10 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
+            echo 34.224.216.111 >> inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
             # exit 1
-      - destroy-environment
+      # - destroy-environment
 
   run-migrations:
     docker:
@@ -335,7 +336,7 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
             cat .env
             cd ..
-            tar -cvf artifact.tar.gz dist/* package*
+            tar -cvf artifact.tar.gz dist/.env dist/* package*
             cd ..
             cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
@@ -429,25 +430,25 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure:
-          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [master]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-          filters:
-            branches:
-              only: [master]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - deploy-infrastructure:
+      #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     filters:
+      #       branches:
+      #         only: [master]
+      - configure-infrastructure
+      #     requires: [deploy-infrastructure]
+      #     filters:
+      #       branches:
+      #         only: [master]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-backend, deploy-frontend]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
