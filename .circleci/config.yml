@@ -37,9 +37,19 @@ commands:
             if (( $SUCCESS == 1 ));
             then
               cd ~/project/backend
+              echo $NODE_ENV
+              echo $VERSION
+              echo $TYPEORM_CONNECTION
+              echo $TYPEORM_MIGRATIONS_DIR
+              echo $TYPEORM_ENTITIES
+              echo $TYPEORM_MIGRATIONS
+              echo $TYPEORM_HOST
+              echo $TYPEORM_PORT
+              echo $TYPEORM_USERNAME
+              echo $TYPEORM_PASSWORD
+              echo $TYPEORM_DATABASE
               npm install
-              npm run migrations:revert > revert_migrations_dump.txt
-              cat revert_migrations_dump.txt
+              npm run migrations:revert
             fi
   
   install_nodejs:
