@@ -38,8 +38,8 @@ commands:
             then
               cd ~/project/backend
               npm install
-              npm run migrations:revert
-              cat /home/circleci/.npm/_logs/*-debug.log
+              npm run migrations:revert > revert_migrations_dump.txt
+              cat revert_migrations_dump.txt
             fi
   
   install_nodejs:
@@ -452,7 +452,10 @@ workflows:
       #     filters:
       #       branches:
       #         only: [master]
-      - run-migrations
+      - run-migrations:
+          filters:
+            branches:
+              only: [master]
       #     requires: [configure-infrastructure]
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
