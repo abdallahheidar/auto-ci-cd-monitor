@@ -363,6 +363,7 @@ jobs:
             URL="http://${BACKEND_PUBLIC_IP}:3030/api/status"
             echo $BACKEND_PUBLIC_IP
             echo $URL
+            
             if curl -s --head ${URL} | grep "ok"
             then
               echo "It worked!"
