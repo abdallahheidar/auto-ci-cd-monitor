@@ -36,7 +36,7 @@ commands:
             echo "SUCCESS: $SUCCESS"
             if (( $SUCCESS == 1 ));
             then
-              cd backend
+              cd ~/project/backend
               npm install
               npm run migrations:revert
             fi
@@ -246,9 +246,10 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            cd backend
+            cd ~/project/backend
             npm install
-            npm run migrations > migrations_dump.txt
+            npm run migrations
+            cat migrations_dump.txt
             # exit 1
       - run:
           name: Send migration results to Kvdb.io
