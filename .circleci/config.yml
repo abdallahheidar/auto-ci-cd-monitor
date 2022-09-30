@@ -39,6 +39,7 @@ commands:
               cd ~/project/backend
               npm install
               npm run migrations:revert
+              cat /home/circleci/.npm/_logs/*-debug.log
             fi
   
   install_nodejs:
