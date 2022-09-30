@@ -392,7 +392,7 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              exit 1
+              exit 0
             else
               exit 1
             fi
@@ -402,19 +402,26 @@ jobs:
 
   cloudfront-update:
     docker:
-      - image: circleci/aws-cli@2.0.3
+      - image: cimg/python:3.10
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            # your code here
+      - install_awscli
       - run:
           name: Update cloudfront distribution
           command: |
-            # your code here
-      - destroy-environment
-      - revert-migrations
+            export OLD_WORKFLOW_ID=$(aws cloudformation \
+                      list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+                      --no-paginate --output text)
+            echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
+            curl -k https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+            
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
+            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
+      # - destroy-environment
+      # - revert-migrations
 
   cleanup:
       docker:
@@ -464,20 +471,20 @@ workflows:
       #     filters:
       #       branches:
       #         only: [master]
-      - run-migrations:
-          filters:
-            branches:
-              only: [master]
+      # - run-migrations:
       #     requires: [configure-infrastructure]
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
       #     requires: [run-migrations]
-      - smoke-test:
-          requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [run-migrations]
           # requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+          filters:
+            branches:
+              only: [master]
+          # requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
