@@ -362,7 +362,7 @@ jobs:
               --output text)
             URL="http://${BACKEND_PUBLIC_IP}:3030/api/status"
             
-            if curl -s --head ${URL} | grep "ok"
+            if curl -s --head ${URL}
             then
               echo "It worked!"
               exit 0
