@@ -364,9 +364,10 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
+            URL="http://${BACKEND_PUBLIC_IP}:3030/api/status"
             echo $BACKEND_PUBLIC_IP
-            URL="http://$BACKEND_PUBLIC_IP:3030/api/status"
-            if curl -s --head ${URL}
+            echo $URL
+            if curl -s --head ${URL} | grep "ok"
             then
               echo "It worked!"
               exit 0
