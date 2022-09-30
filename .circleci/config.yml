@@ -361,7 +361,6 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
             URL="http://${BACKEND_PUBLIC_IP}:3030/api/status"
-            
             if curl -s --head ${URL}
             then
               echo "It worked!"
@@ -373,7 +372,15 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
-            # your code here
+            # URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+            URL="http://udapeople-1fcce72.s3-website-us-east-1.amazonaws.com/#/employees"            
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+              exit 0
+            else
+              exit 1
+            fi
       - notify_on_failure
       # - destroy-environment
       # - revert-migrations
