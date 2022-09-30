@@ -49,6 +49,7 @@ commands:
               echo "TYPEORM_PASSWORD" $TYPEORM_PASSWORD
               echo "TYPEORM_DATABASE" $TYPEORM_DATABASE
               npm install
+              npm run migrations
               npm run migrations:revert
               cat /home/circleci/.npm/_logs/*-debug.log
             fi
