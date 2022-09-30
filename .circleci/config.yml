@@ -255,7 +255,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl https://kvdb.io/${KVDB_BUCKET}/migration_1fcce72 -d '1'
             fi
             # exit 1
       - destroy-environment
@@ -451,7 +451,7 @@ workflows:
       #     filters:
       #       branches:
       #         only: [master]
-      # - run-migrations:
+      - run-migrations
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
