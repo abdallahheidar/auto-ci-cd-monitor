@@ -453,11 +453,13 @@ workflows:
       #         only: [master]
       - run-migrations
       #     requires: [configure-infrastructure]
+      #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
       #     requires: [run-migrations]
-      - smoke-test
+      - smoke-test:
+          requires: [run-migrations]
           # requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
