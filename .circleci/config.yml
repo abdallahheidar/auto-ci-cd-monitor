@@ -36,7 +36,7 @@ commands:
             echo "SUCCESS: $SUCCESS"
             if (( $SUCCESS == 1 ));
             then
-              cd ~/project/backend
+              cd backend
               npm install
               npm run migrations:revert
             fi
