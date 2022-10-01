@@ -416,21 +416,30 @@ jobs:
 
   cleanup:
       docker:
-        - image: python:3.7-alpine3.11
+        - image: amazon/aws-cli
       steps:
         - checkout
         - run:
             name: Get old stack workflow id
             command: |
-              # your code here
-              export OldWorkflowID="the id here"
+              export OLD_WORKFLOW_ID=$(aws cloudformation \
+                list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+                --no-paginate --output text)
+
+              export OLD_WORKFLOW_ID="the id here"
               export STACKS=[] #put the list of stacks here
+
+              export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+                --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+              echo Stack names: "${STACKS[@]}"          
         - run:
             name: Remove old stacks and files
             command: |
-              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+              if [[ "${STACKS[@]}" =~ "${OLD_WORKFLOW_ID}" ]]
               then
-                # your code here
+                echo "${STACKS[@]} > ${OLD_WORKFLOW_ID}"
+              else
+                echo "Nothing to delete"
               fi
 
 workflows:
@@ -464,10 +473,10 @@ workflows:
       #     requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
+      # - cloudfront-update:
           # requires: [smoke-test]
+      - cleanup:
+          # requires: [cloudfront-update]
           filters:
             branches:
               only: [master]
-      # - cleanup:
-      #     requires: [cloudfront-update]
