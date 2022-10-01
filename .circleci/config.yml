@@ -44,14 +44,16 @@ commands:
           name: Dump migrations log
           when: on_fail
           command: |
-            ls ~/.npm/_logs/ | grep debug.log
-            RVRT_MIG_DBG=(ls ~/.npm/_logs/ | grep debug.log)
-            echo "RVRT_MIG_DBG: $RVRT_MIG_DBG"
-            if $RVRT_MIG_DBG | grep debug.log
+            ls ~/.npm/_logs/ | grep debug.log > ~/.npm/_logs/revert_migrations-debug.log
+            export RVRT_MIG_DBG=$(cat ~/.npm/_logs/revert_migrations-debug.log)
+            echo $RVRT_MIG_DBG
+            if grep -q "debug.log" ~/.npm/_logs/$RVRT_MIG_DBG
             then
-              echo "Dump migrations log"
-              cat ~/.npm/_logs/$RVRT_MIG_DBG
+              cat  ~/.npm/_logs/$RVRT_MIG_DBG
+            else
+              echo "NO"
             fi
+
   
   install_nodejs:
     description: Install Node.js
