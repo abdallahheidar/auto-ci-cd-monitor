@@ -25,8 +25,7 @@ commands:
     parameters:
       Workflow_ID:
         type: string
-        # default: ${CIRCLE_WORKFLOW_ID:0:7}
-        default: 2bdd352
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
@@ -37,21 +36,18 @@ commands:
             if (( $SUCCESS == 1 ));
             then
               cd ~/project/backend
+              # npm cache clean --force
+              # rm -rf node_modules
               npm install
               npm run migrations:revert
             fi
-      - run:
-          name: Dump migrations log
-          when: on_fail
-          command: |
-            ls ~/.npm/_logs/ | grep debug.log
-            RVRT_MIG_DBG=$(ls ~/.npm/_logs/ | grep debug.log)
-            echo "RVRT_MIG_DBG: $RVRT_MIG_DBG"
-            if $RVRT_MIG_DBG | grep debug.log
-            then
-              echo "Dump migrations log"
-              cat ~/.npm/_logs/$RVRT_MIG_DBG
-            fi
+      # - run:
+      #     name: Dump migrations log
+      #     when: on_fail
+      #     command: |
+      #       ls ~/.npm/_logs/ | grep debug.log > ~/.npm/_logs/revert_migrations-debug.txt
+      #       export RVRT_MIG_DBG=$(cat ~/.npm/_logs/revert_migrations-debug.txt)
+      #       cat ~/.npm/_logs/$RVRT_MIG_DBG
   
   install_nodejs:
     description: Install Node.js
@@ -270,8 +266,8 @@ jobs:
             then
               curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
-            exit 1
-      # - destroy-environment
+            # exit 1
+      - destroy-environment
       - revert-migrations
 
   deploy-frontend:
@@ -397,7 +393,7 @@ jobs:
             fi
       - notify_on_failure
       - revert-migrations
-      # - destroy-environment
+      - destroy-environment
 
   cloudfront-update:
     docker:
@@ -423,8 +419,8 @@ jobs:
             
             echo OLD_WORKFLOW_ID is : ${OLD_WORKFLOW_ID}
             echo CURRENT_WORKFLOW_ID is : ${CIRCLE_WORKFLOW_ID:0:7}
-      # - destroy-environment
-      # - revert-migrations
+      - destroy-environment
+      - revert-migrations
 
   cleanup:
       docker:
@@ -457,38 +453,35 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend:
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - build-backend:
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      - run-migrations:
-          # requires: [configure-infrastructure]
+      - build-frontend:
           filters:
             branches:
               only: [master]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-          # requires: [smoke-test]
-      # - cleanup:
-          # requires: [cloudfront-update]
+      - build-backend:
+          filters:
+            branches:
+              only: [master]
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
