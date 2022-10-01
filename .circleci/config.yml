@@ -432,12 +432,15 @@ jobs:
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
               echo Stack names: "${STACKS[@]}"          
               
-              if [[ "${STACKS[@]}" != "${OLD_WORKFLOW_ID}" ]]
-              then
-                echo "${STACKS[@]} > ${OLD_WORKFLOW_ID}"
-              else
-                echo "Nothing to delete"
-              fi
+              for stacks_cnt in ${STACKS[@]}
+              do
+                if [[ "${stacks_cnt:-7}" != "${OLD_WORKFLOW_ID:-7}" ]]
+                then
+                  echo "${stacks_cnt:-7}" > ${OLD_WORKFLOW_ID:-7}"
+                else
+                  echo "Nothing to delete"
+                fi
+              done
 
 workflows:
   default:
