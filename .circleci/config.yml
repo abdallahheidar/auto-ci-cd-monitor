@@ -49,7 +49,6 @@ commands:
             ls ~/.npm/_logs/ | grep debug.log > ~/.npm/_logs/revert_migrations-debug.txt
             export RVRT_MIG_DBG=$(cat ~/.npm/_logs/revert_migrations-debug.txt)
             cat ~/.npm/_logs/$RVRT_MIG_DBG
-            cat package-lock.json
   
   install_nodejs:
     description: Install Node.js
