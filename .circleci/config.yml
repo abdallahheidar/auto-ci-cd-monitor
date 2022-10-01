@@ -49,6 +49,7 @@ commands:
             echo $RVRT_MIG_DBG
             ls ~/.npm/_logs/ | grep debug.log
             ls ~/.npm/_logs/ | grep revert_migrations-debug.txt
+            cat ~/.npm/_logs/$RVRT_MIG_DBG
             if grep -q "debug.txt" ~/.npm/_logs/$RVRT_MIG_DBG
             then
               cat  ~/.npm/_logs/$RVRT_MIG_DBG
@@ -262,11 +263,11 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            exit 1
             cd ~/project/backend
             npm install
             npm run migrations > migrations_dump.txt
             cat ~/project/backend/migrations_dump.txt
-            # exit 1
       - run:
           name: Send migration results to Kvdb.io
           command: |
@@ -274,7 +275,7 @@ jobs:
             then
               curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
-            exit 1
+            # exit 1
       # - destroy-environment
       - revert-migrations
 
