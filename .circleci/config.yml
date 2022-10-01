@@ -39,6 +39,7 @@ commands:
               cd ~/project/backend
               npm cache clean --force
               rm -rf node_modules
+              rm -f package-lock.json
               npm install
               npm run migrations:revert
             fi
