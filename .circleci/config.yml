@@ -39,18 +39,12 @@ commands:
               cd ~/project/backend
               npm install
               npm run migrations:revert
-              export RVRT_MIG_DBG=$(ls ~/.npm/_logs/ | grep debug.log)
-              echo "RVRT_MIG_DBG: $RVRT_MIG_DBG"
-              if $RVRT_MIG_DBG | grep debug.log
-              then
-                cat ~/.npm/_logs/$RVRT_MIG_DBG
-              fi
             fi
       - run:
           name: Dump migrations log
           when: on_fail
           command: |
-            export RVRT_MIG_DBG=$(ls ~/.npm/_logs/ | grep debug.log)
+            RVRT_MIG_DBG=$(ls ~/.npm/_logs/ | grep debug.log)
             echo "RVRT_MIG_DBG: $RVRT_MIG_DBG"
             if $RVRT_MIG_DBG | grep debug.log
             then
