@@ -210,6 +210,10 @@ jobs:
             cat .circleci/ansible/inventory.txt
             # exit 1
       - run:
+          name: Test Fail
+          command: |
+            exit 1
+      - run:
           name: Install tar - gzip utility
           command: |
             yum install -y tar gzip
@@ -218,6 +222,7 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt         
       - destroy-environment
+      - revert-migrations
 
   configure-infrastructure:
     docker:
@@ -451,35 +456,41 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend:
-          filters:
-            branches:
-              only: [master]
-      - build-backend:
-          filters:
-            branches:
-              only: [master]
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
+      # - build-frontend:
+      #     filters:
+      #       branches:
+      #         only: [master]
+      #     filters:
+      #       branches:
+      #         only: [master]
+      # - build-backend:
+      #     filters:
+      #       branches:
+      #         only: [master]
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-backend, deploy-frontend]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
