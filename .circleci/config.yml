@@ -425,10 +425,9 @@ jobs:
               export OLD_WORKFLOW_ID=$(aws cloudformation \
                 list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                 --no-paginate --output text)
+              echo OLD_WORKFLOW_ID is : ${OLD_WORKFLOW_ID}                
 
-              export OLD_WORKFLOW_ID="the id here"
-              export STACKS=[] #put the list of stacks here
-
+              export STACKS=[]
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
               echo Stack names: "${STACKS[@]}"          
