@@ -222,7 +222,7 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt         
       - destroy-environment
-      - revert-migrationss
+      - revert-migrations
 
   configure-infrastructure:
     docker:
