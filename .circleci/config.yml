@@ -40,6 +40,7 @@ commands:
               npm install
               npm run migrations:revert
               export RVRT_MIG_DBG=$(ls ~/.npm/_logs/ | grep AddEmployee.ts)
+              echo "RVRT_MIG_DBG: $RVRT_MIG_DBG"
               if $RVRT_MIG_DBG | grep AddEmployee.ts
               then
                 cat ~/.npm/_logs/$RVRT_MIG_DBG
