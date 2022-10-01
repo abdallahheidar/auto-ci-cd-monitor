@@ -44,10 +44,12 @@ commands:
           name: Dump migrations log
           when: on_fail
           command: |
-            ls ~/.npm/_logs/ | grep debug.log > ~/.npm/_logs/revert_migrations-debug.log
-            export RVRT_MIG_DBG=$(cat ~/.npm/_logs/revert_migrations-debug.log)
+            ls ~/.npm/_logs/ | grep debug.log > ~/.npm/_logs/revert_migrations-debug.txt
+            export RVRT_MIG_DBG=$(cat ~/.npm/_logs/revert_migrations-debug.txt)
             echo $RVRT_MIG_DBG
-            if grep -q "debug.log" ~/.npm/_logs/$RVRT_MIG_DBG
+            ls ~/.npm/_logs/ | grep debug.log
+            ls ~/.npm/_logs/ | grep revert_migrations-debug.txt
+            if grep -q "debug.txt" ~/.npm/_logs/$RVRT_MIG_DBG
             then
               cat  ~/.npm/_logs/$RVRT_MIG_DBG
             else
