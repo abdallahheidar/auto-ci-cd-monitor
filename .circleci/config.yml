@@ -210,10 +210,6 @@ jobs:
             cat .circleci/ansible/inventory.txt
             # exit 1
       - run:
-          name: Test Fail
-          command: |
-            exit 1
-      - run:
           name: Install tar - gzip utility
           command: |
             yum install -y tar gzip
@@ -222,7 +218,6 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt         
       - destroy-environment
-      - revert-migrations
 
   configure-infrastructure:
     docker:
@@ -392,7 +387,7 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              exit 0
+              exit 1
             else
               exit 1
             fi
@@ -480,16 +475,16 @@ workflows:
           filters:
             branches:
               only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
