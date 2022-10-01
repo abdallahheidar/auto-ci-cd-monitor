@@ -54,7 +54,8 @@ commands:
             echo "RVRT_MIG_DBG: $RVRT_MIG_DBG"
             if $RVRT_MIG_DBG | grep debug.log
             then
-              cat ~/.npm/_logs/$RVRT_MIG_DBG
+              echo "Dump migrations log"
+              # cat ~/.npm/_logs/$RVRT_MIG_DBG
             fi
   
   install_nodejs:
