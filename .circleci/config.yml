@@ -42,13 +42,13 @@ commands:
               npm install
               npm run migrations:revert
             fi
-      - run:
-          name: Dump migrations log
-          when: on_fail
-          command: |
-            ls ~/.npm/_logs/ | grep debug.log > ~/.npm/_logs/revert_migrations-debug.txt
-            export RVRT_MIG_DBG=$(cat ~/.npm/_logs/revert_migrations-debug.txt)
-            cat ~/.npm/_logs/$RVRT_MIG_DBG
+      # - run:
+      #     name: Dump migrations log
+      #     when: on_fail
+      #     command: |
+      #       ls ~/.npm/_logs/ | grep debug.log > ~/.npm/_logs/revert_migrations-debug.txt
+      #       export RVRT_MIG_DBG=$(cat ~/.npm/_logs/revert_migrations-debug.txt)
+      #       cat ~/.npm/_logs/$RVRT_MIG_DBG
   
   install_nodejs:
     description: Install Node.js
@@ -255,11 +255,11 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            exit 1
             cd ~/project/backend
             npm install
             npm run migrations > migrations_dump.txt
             cat ~/project/backend/migrations_dump.txt
+            # exit 1
       - run:
           name: Send migration results to Kvdb.io
           command: |
