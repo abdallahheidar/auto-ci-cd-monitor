@@ -434,9 +434,9 @@ jobs:
               
               for stacks_cnt in ${STACKS[@]}
               do
-                if [[ "${stacks_cnt:-7}" != "${OLD_WORKFLOW_ID:-7}" ]]
+                if [[ ${stacks_cnt:-7} != ${OLD_WORKFLOW_ID:-7} ]]
                 then
-                  echo "${stacks_cnt:-7}" > ${OLD_WORKFLOW_ID:-7}"
+                  echo "${stacks_cnt:-7} > ${OLD_WORKFLOW_ID:-7}"
                 else
                   echo "Nothing to delete"
                 fi
